@@ -486,6 +486,54 @@
       .search-input { margin-left: 0; width: 100%; }
     }
 
+    /* ---- COUNTRY STATS TABLE ---- */
+    .country-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .country-table th {
+      text-align: left;
+      padding: 8px 12px;
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--grey-400);
+      border-bottom: 1px solid var(--grey-200);
+    }
+    .country-table th:not(:first-child) { text-align: center; }
+    .country-table td {
+      padding: 8px 12px;
+      font-size: 13px;
+      color: var(--grey-800);
+      border-bottom: 1px solid var(--grey-100);
+    }
+    .country-table td:not(:first-child) { text-align: center; }
+    .country-table tr:last-child td { border-bottom: none; }
+    .country-table tr:hover { background: var(--grey-50); }
+    .country-name {
+      font-weight: 600;
+      color: var(--navy);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .country-flag {
+      font-size: 16px;
+      line-height: 1;
+    }
+    .conv-badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 10px;
+    }
+    .conv-high { background: var(--green-bg); color: var(--green); }
+    .conv-mid { background: var(--amber-bg); color: var(--amber); }
+    .conv-low { background: var(--grey-100); color: var(--grey-600); }
+    .conv-none { color: var(--grey-400); font-size: 11px; }
+
     /* ---- EMPTY STATE ---- */
     .empty-state {
       text-align: center;
@@ -601,6 +649,36 @@
     </div>
   </div>
 
+  <!-- LEADS BY COUNTRY -->
+  <div class="grid-2col">
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-title">Leads by Country</div>
+        <div class="panel-badge" id="countryCount">0 countries</div>
+      </div>
+      <div class="panel-body" id="countryBars">
+        <!-- Rendered by JS -->
+      </div>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot" style="background:var(--grey-300)"></div>New</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--blue)"></div>Contacted</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div>Replied</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--purple)"></div>Meeting</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--amber)"></div>Phone</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--red)"></div>Bounced</div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-title">Country Conversion Rates</div>
+      </div>
+      <div class="panel-body" id="countryStats">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+  </div>
+
   <!-- RECENT ACTIVITY + EMAIL SEQUENCE PROGRESS -->
   <div class="grid-2col">
 
@@ -640,6 +718,10 @@
         <button class="filter-btn" data-filter="distributors" onclick="filterLeads('distributors', this)">Distributors</button>
         <button class="filter-btn" data-filter="replied" onclick="filterLeads('replied', this)">Replied</button>
         <button class="filter-btn" data-filter="phone_followup" onclick="filterLeads('phone_followup', this)">Phone Follow-Up</button>
+        <span style="width:1px;height:20px;background:var(--grey-200);margin:0 4px"></span>
+        <select class="search-input" style="width:150px;margin-left:0;cursor:pointer" id="countryFilter" onchange="filterByCountry(this.value)">
+          <option value="">All Countries</option>
+        </select>
         <input type="text" class="search-input" placeholder="Search leads..." oninput="searchLeads(this.value)">
       </div>
       <div class="table-wrap">
@@ -676,6 +758,7 @@
 let LEADS = [];
 let currentFilter = 'all';
 let currentSearch = '';
+let currentCountry = '';
 let sortField = 'status';
 let sortAsc = true;
 
@@ -703,8 +786,11 @@ function render() {
   renderKPIs();
   renderSegmentBars();
   renderFunnel();
+  renderCountryBars();
+  renderCountryStats();
   renderActivityFeed();
   renderSequenceProgress();
+  populateCountryDropdown();
   renderLeadTable();
 }
 
@@ -794,6 +880,94 @@ function renderFunnel() {
   document.getElementById('funnelStages').innerHTML = html;
 }
 
+// ---- Country Bars ----
+function renderCountryBars() {
+  const countryMap = {};
+  LEADS.forEach(l => {
+    const c = l.country || 'Unknown';
+    if (!countryMap[c]) countryMap[c] = [];
+    countryMap[c].push(l);
+  });
+
+  const countries = Object.keys(countryMap).sort((a, b) => countryMap[b].length - countryMap[a].length);
+  document.getElementById('countryCount').textContent = countries.length + ' countries';
+
+  const statuses = ['new', 'contacted', 'replied', 'meeting_booked', 'phone_followup', 'bounced'];
+  const barClasses = {
+    new: 'bar-new', contacted: 'bar-contacted', replied: 'bar-replied',
+    meeting_booked: 'bar-meeting', phone_followup: 'bar-phone', bounced: 'bar-bounced'
+  };
+
+  let html = '';
+  countries.forEach(country => {
+    const leads = countryMap[country];
+    const total = leads.length;
+    html += `<div class="segment-row">
+      <div class="segment-name">${country}</div>
+      <div class="segment-bar-wrap">`;
+    statuses.forEach(st => {
+      const count = leads.filter(l => l.status === st).length;
+      if (count > 0) {
+        const pct = (count / total * 100).toFixed(1);
+        html += `<div class="segment-bar-fill ${barClasses[st]}" style="width:${pct}%"
+          title="${count} ${st}">${count > 1 ? count : ''}</div>`;
+      }
+    });
+    html += `</div><div class="segment-count">${total}</div></div>`;
+  });
+
+  document.getElementById('countryBars').innerHTML = html;
+}
+
+// ---- Country Stats ----
+function renderCountryStats() {
+  const FLAGS = {
+    'Germany': '🇩🇪', 'France': '🇫🇷', 'Netherlands': '🇳🇱', 'Poland': '🇵🇱',
+    'Spain': '🇪🇸', 'Sweden': '🇸🇪', 'Belgium': '🇧🇪', 'Italy': '🇮🇹',
+    'United Kingdom': '🇬🇧', 'UK': '🇬🇧', 'Denmark': '🇩🇰', 'Austria': '🇦🇹',
+    'Switzerland': '🇨🇭', 'Norway': '🇳🇴', 'Portugal': '🇵🇹', 'Finland': '🇫🇮'
+  };
+
+  const countryMap = {};
+  LEADS.forEach(l => {
+    const c = l.country || 'Unknown';
+    if (!countryMap[c]) countryMap[c] = { total: 0, contacted: 0, replied: 0, meetings: 0 };
+    countryMap[c].total++;
+    if (l.status !== 'new' && l.status !== 'bounced') countryMap[c].contacted++;
+    if (l.status === 'replied' || l.status === 'meeting_booked') countryMap[c].replied++;
+    if (l.status === 'meeting_booked') countryMap[c].meetings++;
+  });
+
+  const countries = Object.keys(countryMap).sort((a, b) => countryMap[b].total - countryMap[a].total);
+
+  let html = `<table class="country-table">
+    <thead><tr>
+      <th>Country</th><th>Leads</th><th>Contacted</th><th>Replies</th><th>Reply Rate</th>
+    </tr></thead><tbody>`;
+
+  countries.forEach(c => {
+    const d = countryMap[c];
+    const flag = FLAGS[c] || '🌍';
+    const replyRate = d.contacted > 0 ? Math.round(d.replied / d.contacted * 100) : 0;
+    let badgeClass = 'conv-none';
+    let badgeText = '—';
+    if (d.contacted > 0) {
+      badgeClass = replyRate >= 20 ? 'conv-high' : replyRate >= 10 ? 'conv-mid' : 'conv-low';
+      badgeText = replyRate + '%';
+    }
+    html += `<tr>
+      <td><div class="country-name"><span class="country-flag">${flag}</span>${c}</div></td>
+      <td>${d.total}</td>
+      <td>${d.contacted}</td>
+      <td>${d.replied}</td>
+      <td><span class="conv-badge ${badgeClass}">${badgeText}</span></td>
+    </tr>`;
+  });
+
+  html += '</tbody></table>';
+  document.getElementById('countryStats').innerHTML = html;
+}
+
 // ---- Activity Feed ----
 function renderActivityFeed() {
   // Generate activity from lead data
@@ -874,6 +1048,11 @@ function renderLeadTable() {
     }
   }
 
+  // Apply country filter
+  if (currentCountry) {
+    filtered = filtered.filter(l => l.country === currentCountry);
+  }
+
   // Apply search
   if (currentSearch) {
     const q = currentSearch.toLowerCase();
@@ -949,6 +1128,20 @@ function filterLeads(filter, btn) {
 function searchLeads(query) {
   currentSearch = query;
   renderLeadTable();
+}
+
+function filterByCountry(country) {
+  currentCountry = country;
+  renderLeadTable();
+}
+
+function populateCountryDropdown() {
+  const countries = [...new Set(LEADS.map(l => l.country).filter(Boolean))].sort();
+  const sel = document.getElementById('countryFilter');
+  sel.innerHTML = '<option value="">All Countries</option>';
+  countries.forEach(c => {
+    sel.innerHTML += `<option value="${c}">${c}</option>`;
+  });
 }
 
 function sortTable(field) {
