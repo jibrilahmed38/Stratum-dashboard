@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Stratum Commodities &mdash; Salt Market Intelligence Report Q1 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --navy: #1B3A5C;
+  --teal: #0E7C7B;
+  --green: #3B6D11;
+  --navy-light: #EBF2FA;
+  --teal-light: #E1F5EE;
+  --green-light: #EAF3DE;
+  --bg: #f5f7fa;
+  --white: #ffffff;
+  --text: #1a2035;
+  --text2: #4a5568;
+  --text3: #8892aa;
+  --border: rgba(0,0,0,0.08);
+  --border2: rgba(0,0,0,0.14);
+}
+html { scroll-behavior: smooth; }
+body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; overflow-x: hidden; }
+
+/* NAV */
+nav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(27,58,92,0.97);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  padding: 0 5%; height: 62px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.nav-logo-text { font-size: 18px; font-weight: 700; color: white; letter-spacing: 1.5px; }
+.nav-logo-sub { font-size: 9px; color: #5DCAA5; letter-spacing: 3px; font-weight: 500; }
+.nav-badge { font-size: 11px; color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.1); padding: 4px 12px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.15); }
+
+/* HERO */
+.hero {
+  background: linear-gradient(135deg, #1B3A5C 0%, #0E4A5C 60%, #0E7C7B 100%);
+  padding: 80px 5% 70px;
+  text-align: center;
+  position: relative; overflow: hidden;
+}
+.hero::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+.hero-eyebrow { font-size: 11px; font-weight: 600; letter-spacing: 3px; color: #5DCAA5; text-transform: uppercase; margin-bottom: 16px; position: relative; }
+.hero h1 { font-size: 46px; font-weight: 700; color: white; line-height: 1.15; margin-bottom: 16px; position: relative; }
+.hero h1 span { color: #5DCAA5; }
+.hero-sub { font-size: 17px; color: rgba(255,255,255,0.72); max-width: 600px; margin: 0 auto 32px; position: relative; line-height: 1.7; }
+.hero-pills { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; position: relative; }
+.hero-pill { font-size: 12px; font-weight: 500; padding: 6px 16px; border-radius: 20px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.85); }
+
+/* SECTION */
+.section { padding: 60px 5%; max-width: 1100px; margin: 0 auto; }
+.section-title { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: var(--text3); margin-bottom: 8px; }
+.section-heading { font-size: 28px; font-weight: 700; color: var(--text); margin-bottom: 32px; line-height: 1.3; }
+.section-heading span { color: var(--navy); }
+
+/* OVERVIEW STATS */
+.stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 48px; }
+.stat-card { background: var(--white); border-radius: 12px; padding: 20px; border: 1px solid var(--border); border-top: 3px solid var(--navy); }
+.stat-label { font-size: 11px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+.stat-value { font-size: 26px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+.stat-sub { font-size: 12px; font-weight: 500; }
+.stat-up { color: #1D9E75; } .stat-down { color: #A32D2D; } .stat-neutral { color: var(--text3); }
+
+/* TABS */
+.tabs-container { background: var(--white); border-radius: 16px; border: 1px solid var(--border); overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.06); margin-bottom: 48px; }
+.tabs-bar { display: grid; grid-template-columns: repeat(3, 1fr); border-bottom: 1px solid var(--border); }
+.tab-btn { padding: 18px 16px; cursor: pointer; border: none; background: transparent; transition: all 0.2s; display: flex; flex-direction: column; align-items: center; gap: 4px; border-right: 1px solid var(--border); position: relative; }
+.tab-btn:last-child { border-right: none; }
+.tab-btn::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: transparent; transition: background 0.2s; }
+.tab-btn.active-ind::after { background: var(--navy); }
+.tab-btn.active-iod::after { background: var(--teal); }
+.tab-btn.active-org::after { background: var(--green); }
+.tab-btn.active-ind { background: #EBF2FA; }
+.tab-btn.active-iod { background: #E1F5EE; }
+.tab-btn.active-org { background: #EAF3DE; }
+.tab-num { width: 28px; height: 28px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: white; margin-bottom: 2px; }
+.tab-btn.active-ind .tab-num { background: var(--navy); }
+.tab-btn.active-iod .tab-num { background: var(--teal); }
+.tab-btn.active-org .tab-num { background: var(--green); }
+.tab-btn:not(.active-ind):not(.active-iod):not(.active-org) .tab-num { background: #cbd5e0; }
+.tab-label-main { font-size: 13px; font-weight: 700; color: var(--text); }
+.tab-label-sub { font-size: 10px; color: var(--text3); font-weight: 500; }
+.tab-content { display: none; padding: 28px; }
+.tab-content.visible { display: block; }
+
+/* REPORT HEADER BAR */
+.report-header { border-radius: 10px; padding: 18px 22px; margin-bottom: 20px; display: flex; align-items: center; gap: 16px; }
+.report-header.ind { background: var(--navy); }
+.report-header.iod { background: var(--teal); }
+.report-header.org { background: var(--green); }
+.rh-icon { width: 44px; height: 44px; background: rgba(255,255,255,0.15); border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.rh-text { flex: 1; color: white; }
+.rh-text h3 { font-size: 18px; font-weight: 700; margin: 0 0 3px; }
+.rh-text p { font-size: 12px; opacity: 0.8; margin: 0; }
+.rh-badge { background: rgba(255,255,255,0.2); color: white; font-size: 11px; font-weight: 700; padding: 6px 14px; border-radius: 20px; white-space: nowrap; flex-shrink: 0; letter-spacing: 0.5px; border: 1px solid rgba(255,255,255,0.25); }
+
+/* INSIGHT BOX */
+.insight { border-radius: 10px; padding: 14px 18px; margin-bottom: 20px; border-left: 4px solid transparent; }
+.insight.ind { background: var(--navy-light); border-left-color: var(--navy); }
+.insight.iod { background: var(--teal-light); border-left-color: var(--teal); }
+.insight.org { background: var(--green-light); border-left-color: var(--green); }
+.insight-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+.insight.ind .insight-label { color: var(--navy); }
+.insight.iod .insight-label { color: var(--teal); }
+.insight.org .insight-label { color: var(--green); }
+.insight p { font-size: 13px; line-height: 1.7; color: var(--text); }
+
+/* METRIC CARDS */
+.metrics-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+.metric-card { background: var(--bg); border-radius: 10px; padding: 14px 16px; }
+.metric-card.ind { border-left: 3px solid var(--navy); }
+.metric-card.iod { border-left: 3px solid var(--teal); }
+.metric-card.org { border-left: 3px solid var(--green); }
+.mc-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text3); margin-bottom: 6px; }
+.mc-value { font-size: 20px; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+.mc-sub { font-size: 11px; font-weight: 500; }
+
+/* TWO COL */
+.two-col { display: grid; grid-template-columns: 1.4fr 1fr; gap: 16px; margin-bottom: 20px; }
+.card { background: var(--bg); border-radius: 10px; padding: 16px 18px; }
+.card-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text3); margin-bottom: 14px; }
+
+/* LEGEND */
+.legend { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 10px; }
+.legend span { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text2); }
+.lsq { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+
+/* BAR CHART */
+.bar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.bar-lbl { width: 92px; font-size: 12px; font-weight: 500; color: var(--text); flex-shrink: 0; }
+.bar-track { flex: 1; height: 7px; background: rgba(0,0,0,0.07); border-radius: 4px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 4px; }
+.bar-val { width: 72px; text-align: right; font-size: 11px; font-weight: 600; color: var(--text2); flex-shrink: 0; }
+
+/* TAGS */
+.tags-row { display: flex; flex-wrap: wrap; gap: 6px; }
+.tag { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; padding: 5px 11px; border-radius: 20px; font-weight: 600; }
+.tag-yes { background: #EAF3DE; color: #27500A; }
+.tag-no { background: #FCEBEB; color: #791F1F; }
+.tag-partial { background: #FAEEDA; color: #633806; }
+.tag-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+.tag-yes .tag-dot { background: #27500A; }
+.tag-no .tag-dot { background: #791F1F; }
+.tag-partial .tag-dot { background: #633806; }
+
+/* COMPARISON TABLE */
+.compare-section { padding: 0 5% 60px; max-width: 1100px; margin: 0 auto; }
+.compare-table { width: 100%; border-collapse: collapse; background: var(--white); border-radius: 12px; overflow: hidden; border: 1px solid var(--border); }
+.compare-table th { padding: 14px 18px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: white; text-align: left; }
+.compare-table th:first-child { background: var(--text); }
+.compare-table th.th-ind { background: var(--navy); }
+.compare-table th.th-iod { background: var(--teal); }
+.compare-table th.th-org { background: var(--green); }
+.compare-table td { padding: 13px 18px; font-size: 13px; border-bottom: 1px solid var(--border); color: var(--text); vertical-align: top; }
+.compare-table tr:last-child td { border-bottom: none; }
+.compare-table tr:nth-child(even) td { background: rgba(0,0,0,0.015); }
+.compare-table td:first-child { font-weight: 600; color: var(--text2); font-size: 12px; }
+
+/* FOOTER */
+footer { background: var(--navy); color: rgba(255,255,255,0.6); padding: 32px 5%; }
+.footer-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+.footer-logo-wrap { display: flex; align-items: center; gap: 10px; }
+.footer-logo-text { color: white; font-weight: 700; font-size: 15px; letter-spacing: 1px; }
+.footer-logo-sub { color: #5DCAA5; font-size: 9px; letter-spacing: 2px; }
+.footer-info { font-size: 11px; line-height: 1.8; text-align: right; }
+.footer-info a { color: #5DCAA5; text-decoration: none; }
+
+/* RESPONSIVE UTILITY GRIDS (for inline-styled grids) */
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+.grid-2col { display: grid; grid-template-columns: 1.4fr 1fr; gap: 16px; }
+
+@media (max-width: 768px) {
+  .hero { padding: 50px 5% 40px; }
+  .hero h1 { font-size: 26px; }
+  .hero-sub { font-size: 14px; }
+  .hero-pills { gap: 8px; }
+  .hero-pill { font-size: 10px; padding: 5px 10px; }
+  .section { padding: 36px 4%; }
+  .section-heading { font-size: 22px; margin-bottom: 20px; }
+  .stats-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .stat-value { font-size: 20px; }
+  .stat-card { padding: 14px; }
+  .metrics-row { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .mc-value { font-size: 16px; }
+  .grid-4 { grid-template-columns: 1fr 1fr; }
+  .grid-2col { grid-template-columns: 1fr; }
+  .two-col { grid-template-columns: 1fr; }
+  .tabs-bar { grid-template-columns: 1fr; }
+  .tab-btn { border-right: none; border-bottom: 1px solid var(--border); padding: 12px 16px; flex-direction: row; gap: 10px; }
+  .tab-content { padding: 16px; }
+  .report-header { flex-direction: column; text-align: center; padding: 14px; }
+  .rh-badge { font-size: 10px; padding: 5px 10px; }
+  .compare-section { padding: 0 4% 40px; }
+  .compare-table { font-size: 11px; display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .compare-table th { padding: 10px 12px; font-size: 9px; white-space: nowrap; }
+  .compare-table td { padding: 10px 12px; font-size: 11px; }
+  .bar-lbl { width: 70px; font-size: 11px; }
+  .bar-val { width: 60px; font-size: 10px; }
+  .footer-inner { flex-direction: column; text-align: center; }
+  .footer-info { text-align: center; }
+  nav { padding: 0 3%; height: 54px; }
+  .nav-logo-text { font-size: 15px; }
+  .nav-badge { font-size: 9px; padding: 3px 8px; }
+}
+
+@media (max-width: 480px) {
+  .hero h1 { font-size: 22px; }
+  .stats-grid { grid-template-columns: 1fr; gap: 8px; }
+  .grid-4 { grid-template-columns: 1fr; }
+  .metrics-row { grid-template-columns: 1fr; }
+  .stat-card { display: flex; align-items: center; gap: 12px; padding: 12px 14px; }
+  .stat-label { margin-bottom: 0; }
+  .stat-value { font-size: 18px; margin-bottom: 0; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">
+    <svg width="28" height="28" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="16,42 6,24 16,6 26,24" fill="white"/>
+      <polygon points="24,42 14,24 24,6 34,24" fill="#5DCAA5" opacity="0.85"/>
+      <polygon points="32,42 22,24 32,6 42,24" fill="white" opacity="0.4"/>
+    </svg>
+    <div>
+      <div class="nav-logo-text">STRATUM</div>
+      <div class="nav-logo-sub">COMMODITIES</div>
+    </div>
+  </a>
+  <div class="nav-badge">Salt Market Intelligence &mdash; Q1 2026</div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-eyebrow">European Market Report</div>
+  <h1>Salt Market Intelligence<br><span>Three Product Categories</span></h1>
+  <p class="hero-sub">A strategic breakdown of the European salt market across industrial, iodised table salt, and organic/gourmet segments &mdash; benchmarked against Stratum&rsquo;s current supply position.</p>
+  <div class="hero-pills">
+    <span class="hero-pill">Industrial Salt &mdash; Phase 1</span>
+    <span class="hero-pill">Iodised Table Salt &mdash; Phase 2</span>
+    <span class="hero-pill">Organic/Gourmet &mdash; Phase 3</span>
+    <span class="hero-pill">Data: 2022&ndash;2025</span>
+  </div>
+</section>
+
+<!-- OVERVIEW STATS -->
+<div class="section">
+  <p class="section-title">Market Overview</p>
+  <h2 class="section-heading">European Salt Market at a Glance</h2>
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-label">EU avg import price 2024</div>
+      <div class="stat-value">$136/t</div>
+      <div class="stat-sub stat-down">&#9660; &minus;3.4% vs 2023</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">EU market value 2024</div>
+      <div class="stat-value">$7.6B</div>
+      <div class="stat-sub stat-neutral">Stable vs prior year</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">EU gourmet market 2024</div>
+      <div class="stat-value">$2.68B</div>
+      <div class="stat-sub stat-up">&#9650; +5.97% CAGR to 2033</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Germany &mdash; largest importer</div>
+      <div class="stat-value">1,423K t</div>
+      <div class="stat-sub stat-neutral">28% of EU imports</div>
+    </div>
+  </div>
+
+<!-- TOPLINE OVERVIEW -->
+<div style="margin-bottom:40px;">
+  <p class="section-title">Overall Market Trends</p>
+  <h2 class="section-heading">EU Salt Price Trends &amp; Country Breakdown</h2>
+
+  <div style="background:#EBF2FA;border-left:4px solid #1B3A5C;border-radius:10px;padding:14px 18px;margin-bottom:20px;">
+    <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#1B3A5C;margin-bottom:6px;">Stratum Opportunity</div>
+    <p style="font-size:13px;line-height:1.7;color:#1a2035;">EU import prices peaked at $140/t in 2023 and have softened to $136/t &mdash; but remain 73% higher than 2015 levels. France pays the most ($204/t), Poland the least ($96/t). African solar salt has a very low carbon footprint (1kg CO2/t) &mdash; a growing differentiator vs rock salt (up to 100kg CO2/t). Global wholesale prices have declined from $0.20&ndash;$1.43/kg in 2023 to $0.20&ndash;$0.99/kg in 2024, making buyers actively seek competitive alternatives.</p>
+  </div>
+
+  <div class="grid-4">
+    <div style="background:var(--white);border:1px solid var(--border);border-radius:10px;padding:16px;border-top:3px solid var(--navy);">
+      <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--text3);margin-bottom:6px;">Global avg import 2024</div>
+      <div style="font-size:22px;font-weight:700;color:var(--text);">$67/t</div>
+      <div style="font-size:11px;font-weight:500;color:#A32D2D;">&#9660; &minus;6.2% vs 2023</div>
+    </div>
+    <div style="background:var(--white);border:1px solid var(--border);border-radius:10px;padding:16px;border-top:3px solid var(--navy);">
+      <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--text3);margin-bottom:6px;">Global export sales 2024</div>
+      <div style="font-size:22px;font-weight:700;color:var(--text);">$3.78B</div>
+      <div style="font-size:11px;font-weight:500;color:#1D9E75;">&#9650; +10.5% vs 2023</div>
+    </div>
+    <div style="background:var(--white);border:1px solid var(--border);border-radius:10px;padding:16px;border-top:3px solid var(--navy);">
+      <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--text3);margin-bottom:6px;">EU peak price (2023)</div>
+      <div style="font-size:22px;font-weight:700;color:var(--text);">$140/t</div>
+      <div style="font-size:11px;font-weight:500;color:#8892aa;">All-time high, now softening</div>
+    </div>
+    <div style="background:var(--white);border:1px solid var(--border);border-radius:10px;padding:16px;border-top:3px solid var(--teal);">
+      <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--text3);margin-bottom:6px;">Solar salt carbon footprint</div>
+      <div style="font-size:22px;font-weight:700;color:var(--text);">1kg CO2/t</div>
+      <div style="font-size:11px;font-weight:500;color:#1D9E75;">&#9650; vs up to 100kg for rock salt</div>
+    </div>
+  </div>
+
+  <div class="grid-2col">
+    <div style="background:var(--white);border:1px solid var(--border);border-radius:10px;padding:16px 18px;">
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--text3);margin-bottom:10px;">EU salt import price trend &mdash; all grades ($/tonne, 2022&ndash;2025)</div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:10px;">
+        <span style="display:flex;align-items:center;gap:5px;font-size:11px;color:#4a5568;"><span style="width:10px;height:10px;border-radius:2px;background:#1B3A5C;flex-shrink:0;"></span>EU average</span>
+        <span style="display:flex;align-items:center;gap:5px;font-size:11px;color:#4a5568;"><span style="width:10px;height:10px;border-radius:2px;background:#0E7C7B;flex-shrink:0;"></span>France</span>
+        <span style="display:flex;align-items:center;gap:5px;font-size:11px;color:#4a5568;"><span style="width:10px;height:10px;border-radius:2px;background:#378ADD;flex-shrink:0;"></span>Germany</span>
+        <span style="display:flex;align-items:center;gap:5px;font-size:11px;color:#4a5568;"><span style="width:10px;height:10px;border-radius:2px;background:#BA7517;flex-shrink:0;"></span>Poland</span>
+        <span style="display:flex;align-items:center;gap:5px;font-size:11px;color:#4a5568;"><span style="width:10px;height:10px;border-radius:2px;background:#D4537E;flex-shrink:0;"></span>Italy</span>
+      </div>
+      <div style="position:relative;width:100%;height:230px;"><canvas id="chart-topline"></canvas></div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:14px;">
+      <div style="background:var(--white);border:1px solid var(--border);border-radius:10px;padding:16px 18px;">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--text3);margin-bottom:12px;">2024 import price by country ($/tonne)</div>
+        <div class="bar-row"><span class="bar-lbl">France</span><div class="bar-track"><div class="bar-fill" style="width:100%;background:#0E7C7B;"></div></div><span class="bar-val">$204/t</span></div>
+        <div class="bar-row"><span class="bar-lbl">UK</span><div class="bar-track"><div class="bar-fill" style="width:90%;background:#1B3A5C;"></div></div><span class="bar-val">$185/t</span></div>
+        <div class="bar-row"><span class="bar-lbl">EU avg</span><div class="bar-track"><div class="bar-fill" style="width:67%;background:#378ADD;"></div></div><span class="bar-val">$136/t</span></div>
+        <div class="bar-row"><span class="bar-lbl">Germany</span><div class="bar-track"><div class="bar-fill" style="width:62%;background:#378ADD;"></div></div><span class="bar-val">$126/t</span></div>
+        <div class="bar-row"><span class="bar-lbl">Netherlands</span><div class="bar-track"><div class="bar-fill" style="width:57%;background:#378ADD;"></div></div><span class="bar-val">$116/t</span></div>
+        <div class="bar-row"><span class="bar-lbl">Italy</span><div class="bar-track"><div class="bar-fill" style="width:47%;background:#BA7517;"></div></div><span class="bar-val">$96/t</span></div>
+        <div class="bar-row"><span class="bar-lbl">Spain</span><div class="bar-track"><div class="bar-fill" style="width:45%;background:#BA7517;"></div></div><span class="bar-val">$92/t</span></div>
+        <div class="bar-row"><span class="bar-lbl">Poland</span><div class="bar-track"><div class="bar-fill" style="width:47%;background:#D4537E;"></div></div><span class="bar-val">$96/t</span></div>
+      </div>
+      <div style="background:var(--white);border:1px solid var(--border);border-radius:10px;padding:16px 18px;">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--text3);margin-bottom:12px;">Import volume by country 2024 (000 tonnes)</div>
+        <div class="bar-row"><span class="bar-lbl">Germany</span><div class="bar-track"><div class="bar-fill" style="width:100%;background:#1B3A5C;"></div></div><span class="bar-val">1,423K t</span></div>
+        <div class="bar-row"><span class="bar-lbl">Belgium</span><div class="bar-track"><div class="bar-fill" style="width:86%;background:#1B3A5C;"></div></div><span class="bar-val">1,223K t</span></div>
+        <div class="bar-row"><span class="bar-lbl">Norway</span><div class="bar-track"><div class="bar-fill" style="width:59%;background:#378ADD;"></div></div><span class="bar-val">843K t</span></div>
+        <div class="bar-row"><span class="bar-lbl">Italy</span><div class="bar-track"><div class="bar-fill" style="width:50%;background:#378ADD;"></div></div><span class="bar-val">709K t</span></div>
+        <div class="bar-row"><span class="bar-lbl">Poland</span><div class="bar-track"><div class="bar-fill" style="width:42%;background:#85B7EB;"></div></div><span class="bar-val">603K t</span></div>
+        <div class="bar-row"><span class="bar-lbl">France</span><div class="bar-track"><div class="bar-fill" style="width:37%;background:#85B7EB;"></div></div><span class="bar-val">525K t</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tabs-container">
+  <div class="tabs-bar">
+    <button class="tab-btn active-ind" id="tab-ind" onclick="showTab('ind')">
+      <div class="tab-num">1</div>
+      <div class="tab-label-main">Industrial Salt</div>
+      <div class="tab-label-sub">Not food grade &mdash; Phase 1</div>
+    </button>
+    <button class="tab-btn" id="tab-iod" onclick="showTab('iod')">
+      <div class="tab-num">2</div>
+      <div class="tab-label-main">Iodised Table Salt</div>
+      <div class="tab-label-sub">Food grade &mdash; Phase 2</div>
+    </button>
+    <button class="tab-btn" id="tab-org" onclick="showTab('org')">
+      <div class="tab-num">3</div>
+      <div class="tab-label-main">Organic / Gourmet Salt</div>
+      <div class="tab-label-sub">Premium food grade &mdash; Phase 3</div>
+    </button>
+  </div>
+
+  <!-- REPORT 1: INDUSTRIAL -->
+  <div class="tab-content visible" id="content-ind">
+    <div class="report-header ind">
+      <div class="rh-icon">
+        <svg width="24" height="24" viewBox="0 0 28 28" fill="none"><rect x="4" y="18" width="20" height="6" rx="2" fill="white"/><rect x="8" y="11" width="12" height="8" rx="1" fill="rgba(255,255,255,0.7)"/><rect x="11" y="4" width="6" height="8" rx="1" fill="rgba(255,255,255,0.45)"/></svg>
+      </div>
+      <div class="rh-text">
+        <h3>Industrial Salt</h3>
+        <p>De-icing &bull; Water treatment &bull; Chemical manufacturing &bull; Not food grade &bull; Bulk supply</p>
+      </div>
+      <div class="rh-badge">Phase 1 &mdash; Start Now</div>
+    </div>
+    <div class="insight ind">
+      <div class="insight-label">Stratum Positioning</div>
+      <p>National Salt Somalia produces unrefined and partially refined salt which is ready for industrial use now &mdash; no food-grade certifications required. Compete on price and volume. African solar salt produces just 1kg CO2 per tonne vs up to 100kg for mined rock salt &mdash; a growing differentiator in Europe.</p>
+    </div>
+    <div class="metrics-row">
+      <div class="metric-card ind"><div class="mc-label">Source price range</div><div class="mc-value">$25&ndash;75/t</div><div class="mc-sub stat-neutral">Ex-Africa bulk</div></div>
+      <div class="metric-card ind"><div class="mc-label">EU buyer price 2024</div><div class="mc-value">$68&ndash;110/t</div><div class="mc-sub stat-down">&#9660; Down from $140 peak</div></div>
+      <div class="metric-card ind"><div class="mc-label">NaCl purity required</div><div class="mc-value">&ge;94%</div><div class="mc-sub stat-up">&#9650; Your salt: ~95%+ confirmed</div></div>
+      <div class="metric-card ind"><div class="mc-label">Demand CAGR</div><div class="mc-value">+2.4%</div><div class="mc-sub stat-up">&#9650; Through 2026</div></div>
+    </div>
+    <div class="two-col">
+      <div class="card">
+        <div class="card-title">Price trend &mdash; Europe 2022&ndash;2025 ($/tonne)</div>
+        <div class="legend">
+          <span><span class="lsq" style="background:#1B3A5C;"></span>EU bulk average</span>
+          <span><span class="lsq" style="background:#378ADD;"></span>De-icing grade</span>
+          <span><span class="lsq" style="background:#85B7EB;"></span>Water treatment</span>
+        </div>
+        <div style="position:relative;width:100%;height:200px;"><canvas id="chart-ind"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Estimated delivered price by country ($/tonne)</div>
+        <div class="bar-row"><span class="bar-lbl">Sweden</span><div class="bar-track"><div class="bar-fill" style="width:100%;background:#1B3A5C;"></div></div><span class="bar-val">$72/t</span></div>
+        <div class="bar-row"><span class="bar-lbl">Germany</span><div class="bar-track"><div class="bar-fill" style="width:94%;background:#1B3A5C;"></div></div><span class="bar-val">$68/t</span></div>
+        <div class="bar-row"><span class="bar-lbl">France</span><div class="bar-track"><div class="bar-fill" style="width:90%;background:#378ADD;"></div></div><span class="bar-val">$65/t</span></div>
+        <div class="bar-row"><span class="bar-lbl">Netherlands</span><div class="bar-track"><div class="bar-fill" style="width:86%;background:#378ADD;"></div></div><span class="bar-val">$62/t</span></div>
+        <div class="bar-row"><span class="bar-lbl">Belgium</span><div class="bar-track"><div class="bar-fill" style="width:81%;background:#85B7EB;"></div></div><span class="bar-val">$58/t</span></div>
+        <div class="bar-row"><span class="bar-lbl">Poland</span><div class="bar-track"><div class="bar-fill" style="width:63%;background:#85B7EB;"></div></div><span class="bar-val">$45/t</span></div>
+        <p style="font-size:11px;color:#8892aa;margin-top:10px;">Estimated CIF delivered prices, bulk industrial grade</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Stratum readiness assessment</div>
+      <div class="tags-row">
+        <span class="tag tag-yes"><span class="tag-dot"></span>Ready to supply now</span>
+        <span class="tag tag-yes"><span class="tag-dot"></span>No food certifications needed</span>
+        <span class="tag tag-yes"><span class="tag-dot"></span>Unrefined salt acceptable</span>
+        <span class="tag tag-yes"><span class="tag-dot"></span>Jumbo sack &amp; bulk formats</span>
+        <span class="tag tag-yes"><span class="tag-dot"></span>Strong price advantage</span>
+        <span class="tag tag-yes"><span class="tag-dot"></span>Low carbon footprint (1kg CO2/t)</span>
+        <span class="tag tag-partial"><span class="tag-dot"></span>Seasonal demand peaks in winter</span>
+        <span class="tag tag-partial"><span class="tag-dot"></span>High volume, lower margin per tonne</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- REPORT 2: IODISED -->
+  <div class="tab-content" id="content-iod">
+    <div class="report-header iod">
+      <div class="rh-icon">
+        <svg width="24" height="24" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="9" fill="none" stroke="white" stroke-width="2"/><circle cx="14" cy="14" r="4" fill="white"/></svg>
+      </div>
+      <div class="rh-text">
+        <h3>Iodised Table Salt</h3>
+        <p>Food grade &bull; Requires iodine fortification &bull; Food manufacturers, packers &amp; distributors</p>
+      </div>
+      <div class="rh-badge">Phase 2 &mdash; Medium Term</div>
+    </div>
+    <div class="insight iod">
+      <div class="insight-label">Stratum Positioning</div>
+      <p>Your Fera Science report confirms food-grade purity (375,000mg/kg sodium, heavy metals below EU limits). To enter the iodised salt market you need to add an iodisation step &mdash; either at source in Somalia or via a European co-packer. This unlocks a price point 2&ndash;3x above industrial. Table salt market growing at 4.5% CAGR through 2031.</p>
+    </div>
+    <div class="metrics-row">
+      <div class="metric-card iod"><div class="mc-label">Iodised wholesale price</div><div class="mc-value">$150&ndash;300/t</div><div class="mc-sub stat-up">&#9650; Premium vs industrial</div></div>
+      <div class="metric-card iod"><div class="mc-label">EU food grade import 2024</div><div class="mc-value">$136&ndash;204/t</div><div class="mc-sub stat-down">&#9660; France highest, Poland lowest</div></div>
+      <div class="metric-card iod"><div class="mc-label">Market CAGR 2025&ndash;2031</div><div class="mc-value">+4.5%</div><div class="mc-sub stat-up">&#9650; Steady growth</div></div>
+      <div class="metric-card iod"><div class="mc-label">NaCl purity required</div><div class="mc-value">&ge;97%</div><div class="mc-sub stat-neutral">Your salt: ~95%+ (close)</div></div>
+    </div>
+    <div class="two-col">
+      <div class="card">
+        <div class="card-title">Food salt price trend &mdash; Europe 2022&ndash;2025 ($/tonne)</div>
+        <div class="legend">
+          <span><span class="lsq" style="background:#0E7C7B;"></span>Iodised food grade</span>
+          <span><span class="lsq" style="background:#5DCAA5;"></span>Non-iodised food grade</span>
+          <span><span class="lsq" style="background:#9FE1CB;"></span>Industrial (reference)</span>
+        </div>
+        <div style="position:relative;width:100%;height:200px;"><canvas id="chart-iod"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Import price by country &mdash; food grade ($/tonne)</div>
+        <div class="bar-row"><span class="bar-lbl">France</span><div class="bar-track"><div class="bar-fill" style="width:100%;background:#0E7C7B;"></div></div><span class="bar-val">$204/t</span></div>
+        <div class="bar-row"><span class="bar-lbl">UK</span><div class="bar-track"><div class="bar-fill" style="width:91%;background:#0E7C7B;"></div></div><span class="bar-val">$185/t</span></div>
+        <div class="bar-row"><span class="bar-lbl">Germany</span><div class="bar-track"><div class="bar-fill" style="width:67%;background:#5DCAA5;"></div></div><span class="bar-val">$136/t</span></div>
+        <div class="bar-row"><span class="bar-lbl">Netherlands</span><div class="bar-track"><div class="bar-fill" style="width:60%;background:#5DCAA5;"></div></div><span class="bar-val">$122/t</span></div>
+        <div class="bar-row"><span class="bar-lbl">Italy</span><div class="bar-track"><div class="bar-fill" style="width:47%;background:#9FE1CB;"></div></div><span class="bar-val">$96/t</span></div>
+        <div class="bar-row"><span class="bar-lbl">Poland</span><div class="bar-track"><div class="bar-fill" style="width:47%;background:#9FE1CB;"></div></div><span class="bar-val">$96/t</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Stratum readiness assessment</div>
+      <div class="tags-row">
+        <span class="tag tag-yes"><span class="tag-dot"></span>Base salt quality confirmed (Fera report)</span>
+        <span class="tag tag-yes"><span class="tag-dot"></span>Strong margin vs industrial</span>
+        <span class="tag tag-yes"><span class="tag-dot"></span>Growing market 4.5% CAGR</span>
+        <span class="tag tag-partial"><span class="tag-dot"></span>Iodisation step required</span>
+        <span class="tag tag-partial"><span class="tag-dot"></span>HACCP certification needed</span>
+        <span class="tag tag-partial"><span class="tag-dot"></span>EU food labelling compliance required</span>
+        <span class="tag tag-no"><span class="tag-dot"></span>Not ready immediately &mdash; Phase 2</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- REPORT 3: ORGANIC -->
+  <div class="tab-content" id="content-org">
+    <div class="report-header org">
+      <div class="rh-icon">
+        <svg width="24" height="24" viewBox="0 0 28 28" fill="none"><path d="M14 4 C6 8 6 20 14 24 C22 20 22 8 14 4Z" fill="white"/></svg>
+      </div>
+      <div class="rh-text">
+        <h3>Organic / Gourmet Salt</h3>
+        <p>Premium food grade &bull; Natural mineral profile &bull; Health food, specialty, cosmetics &amp; wellness</p>
+      </div>
+      <div class="rh-badge">Phase 3 &mdash; Highest Margin</div>
+    </div>
+    <div class="insight org">
+      <div class="insight-label">Stratum Positioning</div>
+      <p>Your Fera report confirms a natural mineral-rich profile: calcium (5,130mg/kg), magnesium (4,190mg/kg), potassium (890mg/kg). European gourmet salt market worth $2.68B in 2024, growing at 5.97% CAGR to 2033. African solar salt harvested naturally aligns perfectly with this segment. Highest margin opportunity &mdash; requires EU organic certification.</p>
+    </div>
+    <div class="metrics-row">
+      <div class="metric-card org"><div class="mc-label">Organic/gourmet price</div><div class="mc-value">$400&ndash;900/t</div><div class="mc-sub stat-up">&#9650; 3&ndash;6x industrial price</div></div>
+      <div class="metric-card org"><div class="mc-label">EU gourmet market 2024</div><div class="mc-value">$2.68B</div><div class="mc-sub stat-up">&#9650; Growing to $4.52B by 2033</div></div>
+      <div class="metric-card org"><div class="mc-label">Market CAGR 2025&ndash;2033</div><div class="mc-value">+5.97%</div><div class="mc-sub stat-up">&#9650; Fastest growing segment</div></div>
+      <div class="metric-card org"><div class="mc-label">Mineral richness</div><div class="mc-value">High</div><div class="mc-sub stat-up">&#9650; Ca, Mg, K confirmed by Fera</div></div>
+    </div>
+    <div class="two-col">
+      <div class="card">
+        <div class="card-title">Organic/gourmet price trend &mdash; Europe 2022&ndash;2025 ($/tonne)</div>
+        <div class="legend">
+          <span><span class="lsq" style="background:#3B6D11;"></span>Organic gourmet</span>
+          <span><span class="lsq" style="background:#639922;"></span>Natural unrefined sea salt</span>
+          <span><span class="lsq" style="background:#97C459;"></span>Food grade (reference)</span>
+        </div>
+        <div style="position:relative;width:100%;height:200px;"><canvas id="chart-org"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Price by country &mdash; organic/gourmet ($/tonne)</div>
+        <div class="bar-row"><span class="bar-lbl">France</span><div class="bar-track"><div class="bar-fill" style="width:100%;background:#3B6D11;"></div></div><span class="bar-val">$800&ndash;900/t</span></div>
+        <div class="bar-row"><span class="bar-lbl">Germany</span><div class="bar-track"><div class="bar-fill" style="width:85%;background:#3B6D11;"></div></div><span class="bar-val">$680&ndash;780/t</span></div>
+        <div class="bar-row"><span class="bar-lbl">Netherlands</span><div class="bar-track"><div class="bar-fill" style="width:78%;background:#639922;"></div></div><span class="bar-val">$620&ndash;720/t</span></div>
+        <div class="bar-row"><span class="bar-lbl">UK</span><div class="bar-track"><div class="bar-fill" style="width:72%;background:#639922;"></div></div><span class="bar-val">$580&ndash;680/t</span></div>
+        <div class="bar-row"><span class="bar-lbl">Spain</span><div class="bar-track"><div class="bar-fill" style="width:58%;background:#97C459;"></div></div><span class="bar-val">$460&ndash;560/t</span></div>
+        <div class="bar-row"><span class="bar-lbl">Poland</span><div class="bar-track"><div class="bar-fill" style="width:45%;background:#97C459;"></div></div><span class="bar-val">$360&ndash;440/t</span></div>
+        <div style="height:1px;background:rgba(0,0,0,0.07);margin:14px 0;"></div>
+        <div class="card-title">Price by buyer segment ($/tonne)</div>
+        <div class="bar-row"><span class="bar-lbl">Health food</span><div class="bar-track"><div class="bar-fill" style="width:100%;background:#3B6D11;"></div></div><span class="bar-val">$700&ndash;900/t</span></div>
+        <div class="bar-row"><span class="bar-lbl">Cosmetics</span><div class="bar-track"><div class="bar-fill" style="width:78%;background:#3B6D11;"></div></div><span class="bar-val">$500&ndash;700/t</span></div>
+        <div class="bar-row"><span class="bar-lbl">Artisan food</span><div class="bar-track"><div class="bar-fill" style="width:67%;background:#639922;"></div></div><span class="bar-val">$450&ndash;600/t</span></div>
+        <div class="bar-row"><span class="bar-lbl">Spa &amp; wellness</span><div class="bar-track"><div class="bar-fill" style="width:56%;background:#639922;"></div></div><span class="bar-val">$400&ndash;550/t</span></div>
+        <div class="bar-row"><span class="bar-lbl">Sports nutrition</span><div class="bar-track"><div class="bar-fill" style="width:50%;background:#97C459;"></div></div><span class="bar-val">$380&ndash;480/t</span></div>
+        <p style="font-size:11px;color:#8892aa;margin-top:10px;">Estimated wholesale prices, organic/gourmet food grade</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Stratum readiness assessment</div>
+      <div class="tags-row">
+        <span class="tag tag-yes"><span class="tag-dot"></span>Natural mineral profile confirmed (Fera)</span>
+        <span class="tag tag-yes"><span class="tag-dot"></span>Solar evaporation = organic aligned</span>
+        <span class="tag tag-yes"><span class="tag-dot"></span>Highest margin opportunity</span>
+        <span class="tag tag-yes"><span class="tag-dot"></span>African provenance = strong story</span>
+        <span class="tag tag-yes"><span class="tag-dot"></span>Fastest growing segment (5.97% CAGR)</span>
+        <span class="tag tag-partial"><span class="tag-dot"></span>EU organic certification required</span>
+        <span class="tag tag-partial"><span class="tag-dot"></span>Smaller order volumes</span>
+        <span class="tag tag-no"><span class="tag-dot"></span>Longest runway &mdash; Phase 3</span>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- COMPARISON TABLE -->
+<div class="compare-section">
+  <p class="section-title">Side by Side</p>
+  <h2 class="section-heading" style="margin-bottom:20px;">Category Comparison</h2>
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th></th>
+        <th class="th-ind">Industrial Salt</th>
+        <th class="th-iod">Iodised Table Salt</th>
+        <th class="th-org">Organic / Gourmet</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Food grade?</td><td>No</td><td>Yes</td><td>Yes (premium)</td></tr>
+      <tr><td>EU buyer price</td><td>$68&ndash;110/t</td><td>$136&ndash;204/t</td><td>$400&ndash;900/t</td></tr>
+      <tr><td>Certifications needed</td><td>None</td><td>HACCP, EU food grade, iodisation</td><td>EU Organic, food grade, COA</td></tr>
+      <tr><td>Ready to supply?</td><td>Yes &mdash; now</td><td>Phase 2 &mdash; after certs</td><td>Phase 3 &mdash; after org. cert</td></tr>
+      <tr><td>Market growth (CAGR)</td><td>+2.4%</td><td>+4.5%</td><td>+5.97%</td></tr>
+      <tr><td>Best target country</td><td>Germany, Sweden</td><td>France, UK</td><td>France, Netherlands</td></tr>
+      <tr><td>Carbon footprint angle</td><td>Yes &mdash; 1kg CO2/t</td><td>Yes</td><td>Yes &mdash; key selling point</td></tr>
+      <tr><td>Stratum priority</td><td>Immediate</td><td>Medium term</td><td>Long term</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo-wrap">
+      <svg width="30" height="30" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="16,42 6,24 16,6 26,24" fill="white"/>
+        <polygon points="24,42 14,24 24,6 34,24" fill="#5DCAA5" opacity="0.8"/>
+        <polygon points="32,42 22,24 32,6 42,24" fill="white" opacity="0.35"/>
+      </svg>
+      <div>
+        <div class="footer-logo-text">STRATUM COMMODITIES</div>
+        <div class="footer-logo-sub">DB GROUP INTERNATIONAL LTD</div>
+      </div>
+    </div>
+    <div class="footer-info">
+      <div><a href="mailto:hello@stratumcommodities.com">hello@stratumcommodities.com</a> &bull; <a href="https://stratumcommodities.com">stratumcommodities.com</a></div>
+      <div>Registered in England &amp; Wales &bull; +44 7958 131334</div>
+      <div style="margin-top:4px;font-size:10px;opacity:0.5;">Data sources: IndexBox, Fera Science Ltd (R25-66498), MaxiSalt, Procurement Resource &mdash; Q1 2026</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+const yrs = ['2022','2023','2024','2025 est.'];
+const baseOpts = {
+  responsive: true, maintainAspectRatio: false,
+  plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => ' ' + c.dataset.label + ': $' + c.raw + '/t' }}},
+  scales: {
+    y: { ticks: { callback: v => '$' + v, font: { size: 11 }}, grid: { color: 'rgba(0,0,0,0.06)' }},
+    x: { ticks: { font: { size: 11 }}, grid: { display: false }}
+  }
+};
+
+new Chart(document.getElementById('chart-ind'), {
+  type: 'line',
+  data: { labels: yrs, datasets: [
+    { label: 'EU bulk avg', data: [90,110,96,88], borderColor: '#1B3A5C', borderWidth: 2.5, pointRadius: 4, tension: 0.3, fill: false },
+    { label: 'De-icing grade', data: [75,92,80,72], borderColor: '#378ADD', borderWidth: 2, pointRadius: 3, tension: 0.3, fill: false },
+    { label: 'Water treatment', data: [68,78,72,68], borderColor: '#85B7EB', borderWidth: 2, pointRadius: 3, tension: 0.3, fill: false }
+  ]},
+  options: { ...baseOpts, scales: { ...baseOpts.scales, y: { ...baseOpts.scales.y, min: 40, max: 130 }}}
+});
+
+new Chart(document.getElementById('chart-iod'), {
+  type: 'line',
+  data: { labels: yrs, datasets: [
+    { label: 'Iodised food grade', data: [165,195,175,168], borderColor: '#0E7C7B', borderWidth: 2.5, pointRadius: 4, tension: 0.3, fill: false },
+    { label: 'Non-iodised food', data: [130,155,140,134], borderColor: '#5DCAA5', borderWidth: 2, pointRadius: 3, tension: 0.3, fill: false },
+    { label: 'Industrial (ref)', data: [90,110,96,88], borderColor: '#9FE1CB', borderWidth: 1.5, pointRadius: 3, tension: 0.3, fill: false, borderDash: [4,4] }
+  ]},
+  options: { ...baseOpts, scales: { ...baseOpts.scales, y: { ...baseOpts.scales.y, min: 60, max: 240 }}}
+});
+
+new Chart(document.getElementById('chart-org'), {
+  type: 'line',
+  data: { labels: yrs, datasets: [
+    { label: 'Organic gourmet', data: [520,680,650,700], borderColor: '#3B6D11', borderWidth: 2.5, pointRadius: 4, tension: 0.3, fill: false },
+    { label: 'Natural unrefined', data: [320,420,400,430], borderColor: '#639922', borderWidth: 2, pointRadius: 3, tension: 0.3, fill: false },
+    { label: 'Food grade (ref)', data: [130,155,140,134], borderColor: '#97C459', borderWidth: 1.5, pointRadius: 3, tension: 0.3, fill: false, borderDash: [4,4] }
+  ]},
+  options: { ...baseOpts, scales: { ...baseOpts.scales, y: { ...baseOpts.scales.y, min: 80, max: 800 }}}
+});
+
+new Chart(document.getElementById('chart-topline'), {
+  type: 'line',
+  data: { labels: yrs, datasets: [
+    { label: 'EU average', data: [117,140,136,133], borderColor: '#1B3A5C', borderWidth: 2.5, pointRadius: 4, tension: 0.3, fill: false },
+    { label: 'France', data: [175,215,204,200], borderColor: '#0E7C7B', borderWidth: 2, pointRadius: 3, tension: 0.3, fill: false },
+    { label: 'Germany', data: [108,132,126,122], borderColor: '#378ADD', borderWidth: 2, pointRadius: 3, tension: 0.3, fill: false },
+    { label: 'Poland', data: [80,102,96,93], borderColor: '#BA7517', borderWidth: 2, pointRadius: 3, tension: 0.3, fill: false },
+    { label: 'Italy', data: [82,102,96,92], borderColor: '#D4537E', borderWidth: 2, pointRadius: 3, tension: 0.3, fill: false }
+  ]},
+  options: { ...baseOpts, scales: { ...baseOpts.scales, y: { ...baseOpts.scales.y, min: 60, max: 240 }}}
+});
+
+function showTab(id) {
+  ['ind','iod','org'].forEach(t => {
+    document.getElementById('content-' + t).classList.remove('visible');
+    const btn = document.getElementById('tab-' + t);
+    btn.classList.remove('active-ind','active-iod','active-org');
+  });
+  document.getElementById('content-' + id).classList.add('visible');
+  document.getElementById('tab-' + id).classList.add('active-' + id);
+}
+</script>
+</body>
+</html>

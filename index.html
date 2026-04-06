@@ -713,9 +713,12 @@
       </div>
       <div class="table-controls">
         <button class="filter-btn active" data-filter="all" onclick="filterLeads('all', this)">All</button>
-        <button class="filter-btn" data-filter="food" onclick="filterLeads('food', this)">Food</button>
-        <button class="filter-btn" data-filter="industrial" onclick="filterLeads('industrial', this)">Industrial</button>
-        <button class="filter-btn" data-filter="distributors" onclick="filterLeads('distributors', this)">Distributors</button>
+        <button class="filter-btn" data-filter="uk_industrial" onclick="filterLeads('uk_industrial', this)">UK Industrial</button>
+        <button class="filter-btn" data-filter="wholesalers" onclick="filterLeads('wholesalers', this)">Wholesalers</button>
+        <button class="filter-btn" data-filter="repackers" onclick="filterLeads('repackers', this)">Repackers</button>
+        <button class="filter-btn" data-filter="eu_industrial" onclick="filterLeads('eu_industrial', this)">EU Industrial</button>
+        <button class="filter-btn" data-filter="uk_food" onclick="filterLeads('uk_food', this)">UK Food</button>
+        <button class="filter-btn" data-filter="eu_food" onclick="filterLeads('eu_food', this)">EU Food</button>
         <button class="filter-btn" data-filter="replied" onclick="filterLeads('replied', this)">Replied</button>
         <button class="filter-btn" data-filter="phone_followup" onclick="filterLeads('phone_followup', this)">Phone Follow-Up</button>
         <span style="width:1px;height:20px;background:var(--grey-200);margin:0 4px"></span>
@@ -822,8 +825,8 @@ function renderKPIs() {
 
 // ---- Segment Bars ----
 function renderSegmentBars() {
-  const segments = ['food', 'industrial', 'distributors'];
-  const labels = { food: 'Food Manufacturers', industrial: 'Industrial Buyers', distributors: 'Distributors' };
+  const segments = ['uk_industrial', 'wholesalers', 'repackers', 'eu_industrial', 'uk_food', 'eu_food'];
+  const labels = { uk_industrial: 'UK Industrial', wholesalers: 'Wholesalers', repackers: 'Repackers', eu_industrial: 'EU Industrial', uk_food: 'UK Food', eu_food: 'EU Food' };
   const statuses = ['new', 'contacted', 'replied', 'meeting_booked', 'phone_followup', 'bounced'];
   const barClasses = {
     new: 'bar-new', contacted: 'bar-contacted', replied: 'bar-replied',
@@ -1041,7 +1044,7 @@ function renderLeadTable() {
 
   // Apply segment/status filter
   if (currentFilter !== 'all') {
-    if (['food', 'industrial', 'distributors'].includes(currentFilter)) {
+    if (['uk_industrial', 'wholesalers', 'repackers', 'eu_industrial', 'uk_food', 'eu_food'].includes(currentFilter)) {
       filtered = filtered.filter(l => l.segment === currentFilter);
     } else {
       filtered = filtered.filter(l => l.status === currentFilter);
@@ -1157,14 +1160,14 @@ function sortTable(field) {
 // ---- Demo Data ----
 function getDemoData() {
   return [
-    { first_name: "Patrick", last_name: "Fargeot", email: "p.fargeot@lavignery.fr", title: "Procurement Manager", company: "LA VIGNERY", country: "France", segment: "food", status: "new", sequence_step: 0, last_email_date: "", next_email_date: "" },
-    { first_name: "Theres", last_name: "Thieme", email: "t.thieme@anona.de", title: "Head of Procurement", company: "anona GmbH", country: "Germany", segment: "food", status: "new", sequence_step: 0, last_email_date: "", next_email_date: "" },
-    { first_name: "Hans", last_name: "Mueller", email: "h.mueller@bavariasalz.de", title: "Supply Chain Director", company: "BavariaSalz GmbH", country: "Germany", segment: "food", status: "contacted", sequence_step: 1, last_email_date: "2026-03-28", next_email_date: "2026-03-31" },
-    { first_name: "Sophie", last_name: "van den Berg", email: "s.vandenberg@hollandfoods.nl", title: "Ingredient Buyer", company: "Holland Foods BV", country: "Netherlands", segment: "food", status: "replied", sequence_step: 2, last_email_date: "2026-03-27", next_email_date: "" },
-    { first_name: "Lars", last_name: "Eriksson", email: "lars@nordicwater.se", title: "Operations Manager", company: "Nordic Water AB", country: "Sweden", segment: "industrial", status: "contacted", sequence_step: 2, last_email_date: "2026-03-29", next_email_date: "2026-04-03" },
-    { first_name: "Marie", last_name: "Dupont", email: "m.dupont@chemfrance.fr", title: "Plant Manager", company: "ChemFrance SA", country: "France", segment: "industrial", status: "phone_followup", sequence_step: 4, last_email_date: "2026-03-20", next_email_date: "" },
-    { first_name: "Jan", last_name: "De Vries", email: "jan@eurotrade.nl", title: "Managing Director", company: "EuroTrade BV", country: "Netherlands", segment: "distributors", status: "meeting_booked", sequence_step: 2, last_email_date: "2026-03-25", next_email_date: "" },
-    { first_name: "Anna", last_name: "Kowalski", email: "a.kowalski@polskafood.pl", title: "Purchasing Manager", company: "PolskaFood Sp.", country: "Poland", segment: "food", status: "bounced", sequence_step: 0, last_email_date: "", next_email_date: "" },
+    { first_name: "James", last_name: "Wilson", email: "j.wilson@ukgritting.co.uk", title: "Procurement Manager", company: "UK Gritting Services", country: "United Kingdom", segment: "uk_industrial", status: "new", sequence_step: 0, last_email_date: "", next_email_date: "" },
+    { first_name: "Sarah", last_name: "Thompson", email: "s.thompson@watertech.co.uk", title: "Operations Manager", company: "WaterTech Solutions", country: "United Kingdom", segment: "uk_industrial", status: "contacted", sequence_step: 1, last_email_date: "2026-03-28", next_email_date: "2026-03-31" },
+    { first_name: "Jan", last_name: "De Vries", email: "jan@eurotrade.nl", title: "Managing Director", company: "EuroTrade BV", country: "Netherlands", segment: "wholesalers", status: "meeting_booked", sequence_step: 2, last_email_date: "2026-03-25", next_email_date: "" },
+    { first_name: "Tom", last_name: "Richards", email: "t.richards@saltpack.co.uk", title: "Operations Director", company: "SaltPack Ltd", country: "United Kingdom", segment: "repackers", status: "replied", sequence_step: 2, last_email_date: "2026-03-27", next_email_date: "" },
+    { first_name: "Hans", last_name: "Mueller", email: "h.mueller@bavariasalz.de", title: "Supply Chain Director", company: "BavariaSalz GmbH", country: "Germany", segment: "wholesalers", status: "contacted", sequence_step: 1, last_email_date: "2026-03-28", next_email_date: "2026-03-31" },
+    { first_name: "Lars", last_name: "Eriksson", email: "lars@nordicwater.se", title: "Operations Manager", company: "Nordic Water AB", country: "Sweden", segment: "eu_industrial", status: "new", sequence_step: 0, last_email_date: "", next_email_date: "" },
+    { first_name: "Marie", last_name: "Dupont", email: "m.dupont@chemfrance.fr", title: "Plant Manager", company: "ChemFrance SA", country: "France", segment: "eu_industrial", status: "phone_followup", sequence_step: 4, last_email_date: "2026-03-20", next_email_date: "" },
+    { first_name: "Anna", last_name: "Kowalski", email: "a.kowalski@polskafood.pl", title: "Purchasing Manager", company: "PolskaFood Sp.", country: "Poland", segment: "eu_food", status: "new", sequence_step: 0, last_email_date: "", next_email_date: "" },
   ];
 }
 
