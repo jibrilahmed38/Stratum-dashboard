@@ -1,9 +1,9 @@
 {
-  "exported_at": "2026-04-21 11:08:46",
+  "exported_at": "2026-04-21 13:39:28",
   "summary": {
     "total": 663,
     "active_pipeline": 435,
-    "contacted": 4,
+    "contacted": 5,
     "replied": 0,
     "meetings": 0,
     "phone_followup": 0,
@@ -11,7 +11,7 @@
     "disqualified": 192,
     "verified": 596,
     "personalised": 328,
-    "contact_rate": 0.9,
+    "contact_rate": 1.1,
     "reply_rate": 0.0,
     "meeting_rate": 0.0,
     "bounce_rate": 5.4,
@@ -28,8 +28,8 @@
     },
     "wholesalers": {
       "total": 212,
-      "new": 185,
-      "contacted": 4,
+      "new": 184,
+      "contacted": 5,
       "replied": 0,
       "phone_followup": 0,
       "bounced": 23
@@ -4180,10 +4180,10 @@
       "source": "apollo",
       "email_verified": true,
       "verification_score": 90,
-      "sequence_step": 0,
-      "last_email_date": "",
-      "next_email_date": "",
-      "status": "new",
+      "sequence_step": 1,
+      "last_email_date": "2026-04-21",
+      "next_email_date": "2026-04-24",
+      "status": "contacted",
       "personalized_line": "Given Reuse Trading NV's expertise in sustainable commodity sourcing, I believe our premium African salt product tiers would align perfectly with your wholesale distribution portfolio.",
       "call_outcome": "",
       "next_action": ""
