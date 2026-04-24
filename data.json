@@ -1,10 +1,10 @@
 {
-  "exported_at": "2026-04-24 11:57:57",
+  "exported_at": "2026-04-24 15:26:30",
   "summary": {
     "total": 663,
     "active_pipeline": 435,
     "contacted": 20,
-    "replied": 0,
+    "replied": 1,
     "meetings": 0,
     "phone_followup": 0,
     "bounced": 36,
@@ -12,7 +12,7 @@
     "verified": 596,
     "personalised": 328,
     "contact_rate": 4.6,
-    "reply_rate": 0.0,
+    "reply_rate": 5.0,
     "meeting_rate": 0.0,
     "bounce_rate": 5.4,
     "verification_rate": 89.9
@@ -30,7 +30,7 @@
       "total": 212,
       "new": 169,
       "contacted": 20,
-      "replied": 0,
+      "replied": 1,
       "phone_followup": 0,
       "bounced": 23
     },
@@ -4503,7 +4503,7 @@
       "sequence_step": 1,
       "last_email_date": "2026-04-24",
       "next_email_date": "2026-04-27",
-      "status": "contacted",
+      "status": "replied",
       "personalized_line": "Given Ruby Trading's expertise in sourcing quality commodities across emerging markets, I believe our premium African salt portfolio would align perfectly with your distribution network in France.",
       "call_outcome": "",
       "next_action": ""
