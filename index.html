@@ -800,11 +800,16 @@ function render() {
 // ---- KPIs ----
 function renderKPIs() {
   const total = LEADS.length;
-  const contacted = LEADS.filter(l => l.status !== 'new' && l.status !== 'bounced').length;
+  // Contacted = at least Email 1 sent. sequence_step is the source of truth;
+  // status can be 'completed' for disqualified leads that were flagged before
+  // any email was sent, so status-based filtering over-counts them.
+  const contacted = LEADS.filter(l => (l.sequence_step || 0) >= 1).length;
   const replied = LEADS.filter(l => l.status === 'replied' || l.status === 'meeting_booked').length;
   const meetings = LEADS.filter(l => l.status === 'meeting_booked').length;
   const phone = LEADS.filter(l => l.status === 'phone_followup').length;
   const bounced = LEADS.filter(l => l.status === 'bounced').length;
+  const disqualified = LEADS.filter(l => l.status === 'completed' && (l.sequence_step || 0) === 0).length;
+  const activePipeline = total - bounced - disqualified;
 
   document.getElementById('kpiTotal').textContent = total;
   document.getElementById('kpiContacted').textContent = contacted;
@@ -813,8 +818,11 @@ function renderKPIs() {
   document.getElementById('kpiPhone').textContent = phone;
   document.getElementById('kpiBounced').textContent = bounced;
 
+  // Contact rate % expressed against the active (reachable) pipeline,
+  // i.e. total minus bounced minus disqualified. Using total would dilute the
+  // number because it would include 192 Repackers we've already flagged.
   document.getElementById('kpiContactedPct').textContent =
-    total ? Math.round(contacted / total * 100) + '%' : '0%';
+    activePipeline ? Math.round(contacted / activePipeline * 100) + '%' : '0%';
   document.getElementById('kpiReplyRate').textContent =
     contacted ? Math.round(replied / contacted * 100) + '%' : '0%';
   document.getElementById('kpiMeetingRate').textContent =
@@ -936,7 +944,7 @@ function renderCountryStats() {
     const c = l.country || 'Unknown';
     if (!countryMap[c]) countryMap[c] = { total: 0, contacted: 0, replied: 0, meetings: 0 };
     countryMap[c].total++;
-    if (l.status !== 'new' && l.status !== 'bounced') countryMap[c].contacted++;
+    if ((l.sequence_step || 0) >= 1) countryMap[c].contacted++;
     if (l.status === 'replied' || l.status === 'meeting_booked') countryMap[c].replied++;
     if (l.status === 'meeting_booked') countryMap[c].meetings++;
   });
