@@ -708,17 +708,21 @@
   <div class="grid-full">
     <div class="panel">
       <div class="panel-header">
-        <div class="panel-title">All Leads</div>
+        <div class="panel-title">Leads</div>
         <div class="panel-badge" id="leadCount">0 leads</div>
       </div>
       <div class="table-controls">
-        <button class="filter-btn active" data-filter="all" onclick="filterLeads('all', this)">All</button>
+        <button class="filter-btn active" data-filter="active" onclick="filterLeads('active', this)">Active</button>
+        <button class="filter-btn" data-filter="all" onclick="filterLeads('all', this)">All</button>
+        <button class="filter-btn" data-filter="parked" onclick="filterLeads('parked', this)">Parked</button>
+        <span style="width:1px;height:20px;background:var(--grey-200);margin:0 4px"></span>
         <button class="filter-btn" data-filter="uk_industrial" onclick="filterLeads('uk_industrial', this)">UK Industrial</button>
         <button class="filter-btn" data-filter="wholesalers" onclick="filterLeads('wholesalers', this)">Wholesalers</button>
         <button class="filter-btn" data-filter="repackers" onclick="filterLeads('repackers', this)">Repackers</button>
         <button class="filter-btn" data-filter="eu_industrial" onclick="filterLeads('eu_industrial', this)">EU Industrial</button>
         <button class="filter-btn" data-filter="uk_food" onclick="filterLeads('uk_food', this)">UK Food</button>
         <button class="filter-btn" data-filter="eu_food" onclick="filterLeads('eu_food', this)">EU Food</button>
+        <button class="filter-btn" data-filter="contacted" onclick="filterLeads('contacted', this)">Contacted</button>
         <button class="filter-btn" data-filter="replied" onclick="filterLeads('replied', this)">Replied</button>
         <button class="filter-btn" data-filter="phone_followup" onclick="filterLeads('phone_followup', this)">Phone Follow-Up</button>
         <span style="width:1px;height:20px;background:var(--grey-200);margin:0 4px"></span>
@@ -759,7 +763,7 @@
 
 // This will be populated by the Python data exporter
 let LEADS = [];
-let currentFilter = 'all';
+let currentFilter = 'active';  // default to active outreach pipeline (excludes parked + bounced)
 let currentSearch = '';
 let currentCountry = '';
 let sortField = 'status';
@@ -1051,7 +1055,22 @@ function renderLeadTable() {
   let filtered = [...LEADS];
 
   // Apply segment/status filter
-  if (currentFilter !== 'all') {
+  if (currentFilter === 'active') {
+    // Active outreach pipeline: hide leads that are parked (status=completed
+    // with no email ever sent — the relevance/dedupe drops) and bounced ones.
+    // Keeps 'completed' leads that DID get emailed (sequence_step >= 1) since
+    // those represent real conversation history.
+    filtered = filtered.filter(l =>
+      l.status !== 'bounced' &&
+      !(l.status === 'completed' && (l.sequence_step || 0) === 0)
+    );
+  } else if (currentFilter === 'parked') {
+    // Parked = relevance-dropped, dedupe-dropped, or auto-pull mistakes.
+    // All share status=completed + sequence_step=0 (never emailed).
+    filtered = filtered.filter(l =>
+      l.status === 'completed' && (l.sequence_step || 0) === 0
+    );
+  } else if (currentFilter !== 'all') {
     if (['uk_industrial', 'wholesalers', 'repackers', 'eu_industrial', 'uk_food', 'eu_food'].includes(currentFilter)) {
       filtered = filtered.filter(l => l.segment === currentFilter);
     } else {
