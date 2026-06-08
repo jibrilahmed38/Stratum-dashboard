@@ -719,6 +719,7 @@
         <button class="filter-btn" data-filter="uk_industrial" onclick="filterLeads('uk_industrial', this)">UK Industrial</button>
         <button class="filter-btn" data-filter="wholesalers" onclick="filterLeads('wholesalers', this)">Wholesalers</button>
         <button class="filter-btn" data-filter="repackers" onclick="filterLeads('repackers', this)">Repackers</button>
+        <button class="filter-btn" data-filter="asia" onclick="filterLeads('asia', this)">Asia</button>
         <button class="filter-btn" data-filter="eu_industrial" onclick="filterLeads('eu_industrial', this)">EU Industrial</button>
         <button class="filter-btn" data-filter="uk_food" onclick="filterLeads('uk_food', this)">UK Food</button>
         <button class="filter-btn" data-filter="eu_food" onclick="filterLeads('eu_food', this)">EU Food</button>
@@ -837,8 +838,8 @@ function renderKPIs() {
 
 // ---- Segment Bars ----
 function renderSegmentBars() {
-  const segments = ['uk_industrial', 'wholesalers', 'repackers', 'eu_industrial', 'uk_food', 'eu_food'];
-  const labels = { uk_industrial: 'UK Industrial', wholesalers: 'Wholesalers', repackers: 'Repackers', eu_industrial: 'EU Industrial', uk_food: 'UK Food', eu_food: 'EU Food' };
+  const segments = ['uk_industrial', 'wholesalers', 'repackers', 'asia', 'eu_industrial', 'uk_food', 'eu_food'];
+  const labels = { uk_industrial: 'UK Industrial', wholesalers: 'Wholesalers', repackers: 'Repackers', asia: 'Asia', eu_industrial: 'EU Industrial', uk_food: 'UK Food', eu_food: 'EU Food' };
   const statuses = ['new', 'contacted', 'replied', 'meeting_booked', 'phone_followup', 'bounced'];
   const barClasses = {
     new: 'bar-new', contacted: 'bar-contacted', replied: 'bar-replied',
@@ -1071,7 +1072,7 @@ function renderLeadTable() {
       l.status === 'completed' && (l.sequence_step || 0) === 0
     );
   } else if (currentFilter !== 'all') {
-    if (['uk_industrial', 'wholesalers', 'repackers', 'eu_industrial', 'uk_food', 'eu_food'].includes(currentFilter)) {
+    if (['uk_industrial', 'wholesalers', 'repackers', 'asia', 'eu_industrial', 'uk_food', 'eu_food'].includes(currentFilter)) {
       filtered = filtered.filter(l => l.segment === currentFilter);
     } else {
       filtered = filtered.filter(l => l.status === currentFilter);
