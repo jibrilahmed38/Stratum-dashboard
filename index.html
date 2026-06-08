@@ -808,7 +808,15 @@ function render() {
 //      dedupe, brand-only, phase-gated parks all use this prefix).
 //   2. legacy status=completed + sequence_step=0 (older relevance drops that
 //      pre-date the parked_* source naming convention).
+//
+// EXCEPTION: any lead that has replied (reply_category set) is NOT treated as
+// parked from a metrics standpoint, even if their source is parked_*. Their
+// reply is real signal that should count toward funnel/reply numbers. The
+// canonical example is Justin Gooshouwer @ Bdairy ("we trade dairy only"):
+// parked as wrong-segment AFTER his decline reply, but his reply was the
+// data that confirmed the mis-targeting and must not be hidden.
 function isParked(l) {
+  if (l.reply_category) return false;  // replies always surface
   if ((l.source || '').startsWith('parked_')) return true;
   if (l.status === 'completed' && (l.sequence_step || 0) === 0) return true;
   return false;
