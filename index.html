@@ -584,9 +584,9 @@
   <!-- KPI CARDS -->
   <div class="kpi-grid">
     <div class="kpi-card">
-      <div class="kpi-label">Total Leads</div>
+      <div class="kpi-label">Active Leads</div>
       <div class="kpi-value" id="kpiTotal">0</div>
-      <div class="kpi-sub">Across all segments</div>
+      <div class="kpi-sub"><span id="kpiParkedNote">0 parked</span> excluded</div>
     </div>
     <div class="kpi-card">
       <div class="kpi-label">Contacted</div>
@@ -802,21 +802,35 @@ function render() {
   renderLeadTable();
 }
 
+// Single source of truth for whether a lead is parked.
+// Two patterns count as parked:
+//   1. source explicitly starts with "parked_" (the segment-pivot, wrong-industry,
+//      dedupe, brand-only, phase-gated parks all use this prefix).
+//   2. legacy status=completed + sequence_step=0 (older relevance drops that
+//      pre-date the parked_* source naming convention).
+function isParked(l) {
+  if ((l.source || '').startsWith('parked_')) return true;
+  if (l.status === 'completed' && (l.sequence_step || 0) === 0) return true;
+  return false;
+}
+
 // ---- KPIs ----
 function renderKPIs() {
-  const total = LEADS.length;
-  // Contacted = at least Email 1 sent. sequence_step is the source of truth;
-  // status can be 'completed' for disqualified leads that were flagged before
-  // any email was sent, so status-based filtering over-counts them.
-  const contacted = LEADS.filter(l => (l.sequence_step || 0) >= 1).length;
-  const replied = LEADS.filter(l => l.status === 'replied' || l.status === 'meeting_booked').length;
-  const meetings = LEADS.filter(l => l.status === 'meeting_booked').length;
-  const phone = LEADS.filter(l => l.status === 'phone_followup').length;
-  const bounced = LEADS.filter(l => l.status === 'bounced').length;
-  const disqualified = LEADS.filter(l => l.status === 'completed' && (l.sequence_step || 0) === 0).length;
-  const activePipeline = total - bounced - disqualified;
+  const totalAll = LEADS.length;
+  const parkedLeads = LEADS.filter(isParked);
+  const activeLeads = LEADS.filter(l => !isParked(l));
+  const total = activeLeads.length;  // headline KPI = ACTIVE only
+  // Contacted = at least Email 1 sent. sequence_step is the source of truth.
+  const contacted = activeLeads.filter(l => (l.sequence_step || 0) >= 1).length;
+  const replied = activeLeads.filter(l => l.status === 'replied' || l.status === 'meeting_booked').length;
+  const meetings = activeLeads.filter(l => l.status === 'meeting_booked').length;
+  const phone = activeLeads.filter(l => l.status === 'phone_followup').length;
+  const bounced = activeLeads.filter(l => l.status === 'bounced').length;
+  const activePipeline = total - bounced;
 
   document.getElementById('kpiTotal').textContent = total;
+  const parkedNote = document.getElementById('kpiParkedNote');
+  if (parkedNote) parkedNote.textContent = `${parkedLeads.length} parked`;
   document.getElementById('kpiContacted').textContent = contacted;
   document.getElementById('kpiReplies').textContent = replied;
   document.getElementById('kpiMeetings').textContent = meetings;
@@ -848,7 +862,9 @@ function renderSegmentBars() {
 
   let html = '';
   segments.forEach(seg => {
-    const segLeads = LEADS.filter(l => l.segment === seg);
+    // Exclude parked from segment bars — they're noise; the "Parked" filter
+    // button is the place to inspect them.
+    const segLeads = LEADS.filter(l => l.segment === seg && !isParked(l));
     const total = segLeads.length;
     html += `<div class="segment-row">
       <div class="segment-name">${labels[seg]}</div>
@@ -873,12 +889,15 @@ function renderSegmentBars() {
 
 // ---- Funnel ----
 function renderFunnel() {
+  // Funnel reflects active leads only — parked are dead-end and shouldn't
+  // distort the conversion shape.
+  const active = LEADS.filter(l => !isParked(l));
   const stages = [
-    { label: 'Total Leads', count: LEADS.length, cls: 's1' },
-    { label: 'Contacted', count: LEADS.filter(l => l.sequence_step >= 1).length, cls: 's2' },
-    { label: 'Email 2 Sent', count: LEADS.filter(l => l.sequence_step >= 2).length, cls: 's3' },
-    { label: 'Email 3 Sent', count: LEADS.filter(l => l.sequence_step >= 3).length, cls: 's4' },
-    { label: 'Replied', count: LEADS.filter(l => l.status === 'replied' || l.status === 'meeting_booked').length, cls: 's5' },
+    { label: 'Active Leads', count: active.length, cls: 's1' },
+    { label: 'Contacted', count: active.filter(l => l.sequence_step >= 1).length, cls: 's2' },
+    { label: 'Email 2 Sent', count: active.filter(l => l.sequence_step >= 2).length, cls: 's3' },
+    { label: 'Email 3 Sent', count: active.filter(l => l.sequence_step >= 3).length, cls: 's4' },
+    { label: 'Replied', count: active.filter(l => l.status === 'replied' || l.status === 'meeting_booked').length, cls: 's5' },
   ];
 
   const maxCount = Math.max(...stages.map(s => s.count), 1);
@@ -899,7 +918,9 @@ function renderFunnel() {
 // ---- Country Bars ----
 function renderCountryBars() {
   const countryMap = {};
-  LEADS.forEach(l => {
+  // Active only — parked countries (mostly old commodity-trader-Wholesalers
+  // and brand-only drops) would dominate and mislead.
+  LEADS.filter(l => !isParked(l)).forEach(l => {
     const c = l.country || 'Unknown';
     if (!countryMap[c]) countryMap[c] = [];
     countryMap[c].push(l);
@@ -945,7 +966,7 @@ function renderCountryStats() {
   };
 
   const countryMap = {};
-  LEADS.forEach(l => {
+  LEADS.filter(l => !isParked(l)).forEach(l => {
     const c = l.country || 'Unknown';
     if (!countryMap[c]) countryMap[c] = { total: 0, contacted: 0, replied: 0, meetings: 0 };
     countryMap[c].total++;
@@ -986,9 +1007,10 @@ function renderCountryStats() {
 
 // ---- Activity Feed ----
 function renderActivityFeed() {
-  // Generate activity from lead data
+  // Generate activity from lead data — active leads only, parks aren't events
+  // worth surfacing in the feed.
   const activities = [];
-  LEADS.forEach(l => {
+  LEADS.filter(l => !isParked(l)).forEach(l => {
     if (l.status === 'replied') {
       activities.push({ type: 'reply', text: `<strong>${l.first_name} ${l.last_name}</strong> at ${l.company} replied`, date: l.last_email_date });
     }
@@ -1033,11 +1055,13 @@ function renderActivityFeed() {
 function renderSequenceProgress() {
   const steps = [0, 1, 2, 3, 4];
   const labels = ['Not Started', 'Email 1 Sent', 'Email 2 Sent', 'Email 3 Sent', 'Phone Flagged'];
-  const total = LEADS.length || 1;
+  // Active-only — parked leads at step=0 would dominate "Not Started".
+  const active = LEADS.filter(l => !isParked(l));
+  const total = active.length || 1;
 
   let html = '';
   steps.forEach((step, i) => {
-    const count = LEADS.filter(l => l.sequence_step === step).length;
+    const count = active.filter(l => l.sequence_step === step).length;
     const pct = (count / total * 100).toFixed(0);
     html += `<div class="segment-row">
       <div class="segment-name" style="width:120px;font-size:12px;">${labels[i]}</div>
@@ -1055,27 +1079,19 @@ function renderSequenceProgress() {
 function renderLeadTable() {
   let filtered = [...LEADS];
 
-  // Apply segment/status filter
+  // Apply segment/status filter. isParked() is the single source of truth
+  // (covers parked_* sources + legacy status=completed+step=0).
   if (currentFilter === 'active') {
-    // Active outreach pipeline: hide leads that are parked (status=completed
-    // with no email ever sent — the relevance/dedupe drops) and bounced ones.
-    // Keeps 'completed' leads that DID get emailed (sequence_step >= 1) since
-    // those represent real conversation history.
-    filtered = filtered.filter(l =>
-      l.status !== 'bounced' &&
-      !(l.status === 'completed' && (l.sequence_step || 0) === 0)
-    );
+    filtered = filtered.filter(l => !isParked(l) && l.status !== 'bounced');
   } else if (currentFilter === 'parked') {
-    // Parked = relevance-dropped, dedupe-dropped, or auto-pull mistakes.
-    // All share status=completed + sequence_step=0 (never emailed).
-    filtered = filtered.filter(l =>
-      l.status === 'completed' && (l.sequence_step || 0) === 0
-    );
+    filtered = filtered.filter(isParked);
   } else if (currentFilter !== 'all') {
     if (['uk_industrial', 'wholesalers', 'repackers', 'asia', 'eu_industrial', 'uk_food', 'eu_food'].includes(currentFilter)) {
-      filtered = filtered.filter(l => l.segment === currentFilter);
+      // Segment filters also hide parked by default — the explicit Parked
+      // filter is the place to see those.
+      filtered = filtered.filter(l => l.segment === currentFilter && !isParked(l));
     } else {
-      filtered = filtered.filter(l => l.status === currentFilter);
+      filtered = filtered.filter(l => l.status === currentFilter && !isParked(l));
     }
   }
 
@@ -1167,7 +1183,10 @@ function filterByCountry(country) {
 }
 
 function populateCountryDropdown() {
-  const countries = [...new Set(LEADS.map(l => l.country).filter(Boolean))].sort();
+  // Only show countries that appear in ACTIVE leads. Parked-only countries
+  // (e.g. legacy commodity-trader Wholesalers in random countries) would
+  // clutter the dropdown.
+  const countries = [...new Set(LEADS.filter(l => !isParked(l)).map(l => l.country).filter(Boolean))].sort();
   const sel = document.getElementById('countryFilter');
   sel.innerHTML = '<option value="">All Countries</option>';
   countries.forEach(c => {
